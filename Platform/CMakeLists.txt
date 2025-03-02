@@ -1,0 +1,18 @@
+cmake_minimum_required(VERSION 3.22)
+
+file(GLOB_RECURSE PLATFORM_HEADER_FILES "*.h")
+file(GLOB_RECURSE PLATFORM_SOURCE_FILES "*.cpp")
+
+source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}" FILES ${PLATFORM_HEADER_FILES} ${PLATFORM_SOURCE_FILES})
+
+# set(PLATFORM_HEADER_FILES
+#     ColaStart.h
+# )
+
+# set(PLATFORM_SOURCE_FILES
+
+# )
+
+add_library(ColaPlatForm ${PLATFORM_HEADER_FILES} ${PLATFORM_SOURCE_FILES})
+
+target_link_libraries(ColaPlatForm PUBLIC glfw ColaCore)
