@@ -15,6 +15,14 @@ namespace Cola
         ~VulkanRHI() override;
 
         VkDevice *getDevice(); //获取逻辑设备
+        VkFormat getFormat(); //获取交换链图像格式
+        const std::vector<VkImageView> &getSwapChainImageViewVec(); //获取交换链图像视图数组
+        const VkExtent2D &getSwapChainExtent(); //获取交换链交换范围
+        const VkSwapchainKHR &getSwapChain(); //获取交换链
+        uint32_t getGrapicksFamilyIndex(); //获取渲染队列族下标
+
+        const VkQueue &getGraphicQueue(){return mGraphicQueue;}
+        const VkQueue &getPresentQueue(){return mPresentQueue;}
 
     private:
         void Init();
@@ -22,6 +30,11 @@ namespace Cola
         void AddLayer(const char* layerName);
         void AddExtension(const char* extensionName);
         void CreateInstance(); //创建vulkan实例
+        void createDebugMessenger(); //创建debug消息层
+        VkResult createDebugUtilsMessengerExt(VkInstance instance, 
+                                                const VkDebugUtilsMessengerCreateInfoEXT *pCreateInfo, 
+                                                const VkAllocationCallbacks * pAllocator, 
+                                                VkDebugUtilsMessengerEXT *pDebugMessenger);
         void CreateWindowSurface(); //创建Window Surface;
         void SelectPhysicalDevices(); //选择物理设备
         bool isDeviceSuitable(const VkPhysicalDevice &physicalDevice); //判断是否是合适的物理设备
@@ -38,6 +51,7 @@ namespace Cola
         VkInstance mInstance;
         std::vector<const char*> mLayerVec; //验证层数组
         std::vector<const char*> mExtentionVec; //扩展层数组
+        VkDebugUtilsMessengerEXT mDebugMessenger;
         GLFWwindow *mWindow;
         bool mEnableValidationLayers; //是否开启检查验证层支持
         bool mEnableDebugUtilsLabel; //是否启用调试实用程序标签

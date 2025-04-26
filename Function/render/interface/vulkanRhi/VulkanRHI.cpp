@@ -45,9 +45,12 @@ namespace Cola
         if (mEnableValidationLayers)
         {
             AddLayer("VK_LAYER_KHRONOS_validation");
+            // AddLayer("VK_LAYER_LUNARG_api_dump");
         }
 
         CreateInstance();
+
+        createDebugMessenger();
 
         CreateWindowSurface();
 
@@ -142,6 +145,60 @@ namespace Cola
             LOG_ERROR("Failed to create a vulkan instance");
         }
 
+    }
+
+    VkResult VulkanRHI::createDebugUtilsMessengerExt(VkInstance instance, 
+                                                        const VkDebugUtilsMessengerCreateInfoEXT *pCreateInfo, 
+                                                        const VkAllocationCallbacks * pAllocator, 
+                                                        VkDebugUtilsMessengerEXT *pDebugMessenger)
+    {
+        auto func = (PFN_vkCreateDebugUtilsMessengerEXT) vkGetInstanceProcAddr(instance, "vkCreateDebugUtilsMessengerEXT");
+
+        if (func != nullptr)
+        {
+            return func(instance, pCreateInfo, pAllocator, pDebugMessenger);
+        }
+        else
+        {
+            return VK_ERROR_EXTENSION_NOT_PRESENT;
+        }
+    }
+
+
+    // debug callback
+    static VKAPI_ATTR VkBool32 VKAPI_CALL debugCallback(VkDebugUtilsMessageSeverityFlagBitsEXT,
+                                                        VkDebugUtilsMessageTypeFlagsEXT,
+                                                        const VkDebugUtilsMessengerCallbackDataEXT* pCallbackData,
+                                                        void*)
+    {
+        std::cerr << "validation layer: " << pCallbackData->pMessage << std::endl;
+        return VK_FALSE;
+    }
+
+    //创建debug消息层
+    void VulkanRHI::createDebugMessenger()
+    {
+        if (mEnableValidationLayers)
+        {
+            VkDebugUtilsMessengerCreateInfoEXT createInfo;
+            createInfo.sType = VK_STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT;
+            createInfo.messageSeverity = VK_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT;
+            createInfo.messageType = VK_DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT;
+            createInfo.pfnUserCallback = debugCallback;
+            createInfo.pUserData = nullptr;
+            createInfo.pNext = nullptr;
+            createInfo.flags = 0;
+
+            if (createDebugUtilsMessengerExt(mInstance, &createInfo, nullptr, &mDebugMessenger) != VK_SUCCESS)
+            {
+                LOG_ERROR("failed to create debug messenger!");
+            }
+        }
+
+        // if (mEnableDebugUtilsLabel)
+        // {
+
+        // }
     }
 
     bool VulkanRHI::CheckValidationLayerSupport()
@@ -608,5 +665,35 @@ namespace Cola
     VkDevice *VulkanRHI::getDevice()
     {
         return &mDevice;
+    }
+
+    //获取交换链图像格式
+    VkFormat VulkanRHI::getFormat()
+    {
+        return mSwapChainImageFormat;
+    }
+
+    //获取交换链图像视图数组
+    const std::vector<VkImageView> &VulkanRHI::getSwapChainImageViewVec()
+    {
+        return mSwapChainImageViewVec;
+    }
+
+    //获取交换链交换范围
+    const VkExtent2D &VulkanRHI::getSwapChainExtent()
+    {
+        return mSwapChainExtent;
+    }
+
+    //获取交换链
+    const VkSwapchainKHR &VulkanRHI::getSwapChain()
+    {
+        return mSwapChain;
+    }
+
+    //获取渲染队列族下标
+    uint32_t VulkanRHI::getGrapicksFamilyIndex()
+    {
+        return static_cast<uint32_t>(mQueueFamilyInfo.mGraphicIndex);
     }
 }

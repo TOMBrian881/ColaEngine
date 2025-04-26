@@ -4,8 +4,8 @@
 #include <spdlog/spdlog.h>
 #include <memory>
 
-namespace Cola
-{
+// namespace Cola
+// {
     class LogSystem
     {
     public:
@@ -73,7 +73,7 @@ namespace Cola
 
 #define LOG_FATAL(...) LOG_HELPER(LogSystem::LogLevel::fatal, __VA_ARGS__);
 
-}
+// }
 
 
 #endif

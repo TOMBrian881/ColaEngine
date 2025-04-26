@@ -5,8 +5,8 @@
 #include <spdlog/sinks/stdout_color_sinks.h>
 #include <spdlog/spdlog.h>
 
-namespace Cola
-{
+// namespace Cola
+// {
     LogSystem* LogSystem::mLogSystemInstance = nullptr;
     LogSystem::LogSystem()
     {
@@ -33,4 +33,4 @@ namespace Cola
         m_logger->flush();
         spdlog::drop_all();
     }
-}
+// }
