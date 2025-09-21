@@ -1,4 +1,5 @@
-set(third_party_folder "ThirdParty")
+# set(third_party_folder "ThirdParty")
+set(third_party_folder "3rdparty")
 
 set(BUILD_SHARED_LIBS OFF CACHE BOOL "" FORCE)
 
@@ -17,4 +18,10 @@ if(NOT TARGET glfw)
     add_subdirectory(glfw)
     set_target_properties(glfw PROPERTIES FOLDER ${third_party_folder}/glfw)
     set_target_properties(update_mappings PROPERTIES FOLDER ${third_party_folder}/glfw)
+endif()
+
+if(NOT TARGET glad)
+    add_library(glad STATIC glad/src/glad.c)
+    target_include_directories(glad PUBLIC glad/include)
+    set_target_properties(glad PROPERTIES FOLDER ${third_party_folder}/glad)
 endif()

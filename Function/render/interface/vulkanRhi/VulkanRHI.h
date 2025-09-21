@@ -11,7 +11,7 @@ namespace Cola
     class VulkanRHI : public GraphicRhi
     {
     public:
-        VulkanRHI(ColaWindow *window);
+        VulkanRHI(Window *window);
         ~VulkanRHI() override;
 
         VkDevice *getDevice(); //获取逻辑设备

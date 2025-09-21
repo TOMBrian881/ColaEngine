@@ -6,7 +6,7 @@
 
 namespace Cola
 {
-    class ColaWindow;
+    class Window;
     class GraphicRhi
     {
     public:
@@ -14,7 +14,7 @@ namespace Cola
         GraphicRhi &operator=(const GraphicRhi&) = delete;
         virtual ~GraphicRhi() = default;
 
-        static std::unique_ptr<GraphicRhi> Create(ColaWindow *window);
+        static std::unique_ptr<GraphicRhi> Create(Window *window);
     protected:
         GraphicRhi() = default;
     };

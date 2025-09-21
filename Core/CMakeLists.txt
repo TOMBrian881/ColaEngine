@@ -9,5 +9,5 @@ source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}" FILES ${HEADER_FILES} ${SOURCE_F
 add_library(${TARGET_NAME} ${HEADER_FILES} ${SOURCE_FILES})
 target_link_libraries(${TARGET_NAME} PUBLIC
     spdlog::spdlog
-    # ColaPlatForm
+    ColaPlatForm
                 )

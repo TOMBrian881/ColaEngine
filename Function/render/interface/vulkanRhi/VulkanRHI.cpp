@@ -6,9 +6,9 @@
 
 namespace Cola
 {
-    VulkanRHI::VulkanRHI(ColaWindow *window)
+    VulkanRHI::VulkanRHI(Window *window)
     {
-        mWindow = window->getWindow();
+        mWindow = static_cast<GLFWwindow*>(window->getWindow());
         mSurface = VK_NULL_HANDLE;
         mRequiredExtensionsVec = {VK_KHR_SWAPCHAIN_EXTENSION_NAME};
         Init();

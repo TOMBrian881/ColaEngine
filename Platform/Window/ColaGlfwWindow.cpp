@@ -1,11 +1,18 @@
 #include "ColaGlfwWindow.h"
 // #include "../../Core/log/LogSystem.h"
 #include "log/LogSystem.h"
+#include "Events/ApplicationEvent.h"
 
 namespace Cola
 {
     ColaGlfwWindow::ColaGlfwWindow(uint32_t width, uint32_t height, const char* windowName)
     {
+        mWindowData.Width = width;
+        mWindowData.Height = height;
+        mWindowData.Title = windowName;
+
+        LOG_INFO("Create window {0}: width = {1}, height = {2}", windowName, width, height);
+
         if (!glfwInit())
         {
             LOG_ERROR("failed to init GLFW");
@@ -22,6 +29,17 @@ namespace Cola
             glfwTerminate();
             return;
         }
+
+        glfwSetWindowUserPointer(mGLFWwindow, &mWindowData);
+
+
+        glfwSetWindowCloseCallback(mGLFWwindow, [](GLFWwindow* window)
+        {
+            LOG_INFO("WindowCloseCallback");
+            WindowDate& data = *(WindowDate *)glfwGetWindowUserPointer(window);
+            WindowCloseEvent event;
+            data.EventCallback(event);
+        });
 
         GLFWmonitor *primaryMonitor = glfwGetPrimaryMonitor();
         
@@ -57,7 +75,7 @@ namespace Cola
         glfwSwapBuffers(mGLFWwindow);
     }
 
-    GLFWwindow *ColaGlfwWindow::getWindow()
+    void* ColaGlfwWindow::getWindow() const
     {
         return mGLFWwindow;
     }
